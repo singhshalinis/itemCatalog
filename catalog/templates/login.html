@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="main-content-color">
+
+    <div class="login-container postshadoweffect">
+        <div class="row gendisplay">
+
+            <div class="row gendisplay page-title padd">
+                <div class="cat-width title-desc">Sign in</div>
+            </div>
+
+            <div class="row gbutton">
+                <div id="signInButton">
+                    <div class="g-signin2"
+                      data-scope="openid email"
+                      data-clientid="744643114009-l172ar4f6ecnefd1m9rgg8vj9rq1nrl1.apps.googleusercontent.com"
+                      data-accesstype="offline"
+                      data-redirecturi="postmessage"
+                      data-cookiepolicy="single_host_origin"
+                      data-onsuccess="onSignInSuccess"
+                      data-onfailure="onSignInFailure"
+                      data-approvalprompt="force">
+                    </div>
+                </div>
+
+                <div id="result"></div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+
+    <script>
+
+        function onSignInFailure(authResult) {
+            // Hide the sign-in button now that the user is authorized
+            $('#signInButton').attr('style', 'display: none');
+
+            if (authResult['error']) {
+                console.log('There was an error: ' + authResult['error']);
+                $('#result').html("Sign in did not succeed!")
+            } else {
+                $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+            }
+        }
+
+        function onSignInSuccess(authResult) {
+            if (authResult['code']) {
+
+                // Hide the sign-in button now that the user is authorized
+                $('#signInButton').attr('style', 'display: none');
+
+                // Send the one-time-use code to the server, if the server responds,
+                //write a 'login successful' message to the web page and then redirect
+                //back to the main page
+
+                $.ajax({
+                      type: 'POST',
+                      url: '/gconnect?state={{STATE}}',
+                      processData: false,
+                      data: authResult['code'],
+                      contentType: 'application/octet-stream; charset=utf-8',
+                      success: function(result) {
+                        // Handle or verify the server response if necessary.
+                        if (result) {
+                            $('#result').html('<h3>Login Successful!<h3><br><br>'+ result + '<br><br><h6>Redirecting...<h6>')
+                            setTimeout(function() {
+                                                    window.location.href = "/catalog";
+                                                    },
+                                       3000);
+                        }
+                    }
+                });
+            }
+        }
+
+    </script>
+
+{% endblock %}
