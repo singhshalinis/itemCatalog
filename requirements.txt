@@ -2,3 +2,4 @@ Flask
 SQLAlchemy
 uwsgi
 oauth2client
+requests
