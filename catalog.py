@@ -15,8 +15,9 @@ from models import BaseModel, UserModel, ItemsModel, CategoryModel
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+# CLIENT_ID = json.loads(
+    # open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = os.environ.get('CLIENT_ID', None)
 
 @app.before_first_request
 def create_all():
