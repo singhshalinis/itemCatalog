@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 
-{% block pagenavitems %}
-    {% if not user: %}
-        <a class="navitems" href="/login">Login </a>
-    {% else %}
-        <a class="hello" href="/profile">Hello <span class="helloname">{{user.name}}</span></a> |
-        <a class="navitems" href="/signout">Logout</a><!--conditional signin/signout/username-->
-    {% endif %}
-{% endblock %}
-
-
 {% block content %}
 
 <main class="main-content-color">
