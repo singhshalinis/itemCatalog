@@ -405,5 +405,5 @@ def gdisconnect():
 if __name__ == "__main__":
     app.secret_key = 'some secret key'
     app.debug = True
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get('PORT', 33000))
+    app.run()
