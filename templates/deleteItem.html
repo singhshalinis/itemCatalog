@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="main-content-color">
+    <div class="item-subcontainer postshadoweffect">
+
+        <div class="row gendisplay page-title padd">
+            <div class="title-desc">Delete Item?</div>
+        </div>
+
+        <div class="title-padding">
+            <form action="{{url_for('category_item_delete', item_name=item.name)}}" method = 'POST'>
+            <input type="hidden" name='iid' value={{item.id}}>
+            <h4>Are you sure you want to delete: <em>{{item.name}}</em>?</h4>
+            <br><br>
+            <button class="btn is-green-btn btn-ext" type="submit">Yes</button>
+            <a class = "btn is-green-btn btn-ext" href = "/">No</a>
+        </form>
+
+        </div>
+
+    </div>
+</main>
+{% endblock %}

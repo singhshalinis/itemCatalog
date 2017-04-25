@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="main-content-color">
+    <div class="item-subcontainer postshadoweffect">
+
+        <div class="row gendisplay page-title padd">
+            <div class="title-desc">Edit item details</div>
+        </div>
+
+
+    <div class="">
+        <form action="{{url_for('category_item_edit', item_name=item.name)}}" method = 'POST'>
+
+            <input type="hidden" name='iid' value={{item.id}}>
+
+            <br><small>Name</small>
+            <input class="item-details"  type="text" name="iname" value='{{item.name}}'>
+<!--            <br>-->
+            <br><br><small>Description</small>
+            <input class="item-details" type="text" name="idesc" value='{{item.desc}}'>
+<!--            <br>-->
+            <br><br><small>Category</small>
+            <select class="item-details" name="icategory">
+                {% for category in categories %}
+                    <option {% if category.name == item.category.name: %}
+                                selected
+                            {% endif %}
+                            >
+                        {{category.name}}</option>
+                {% endfor %}
+                </select>
+            <br><br>
+
+            <button class="btn is-green-btn sign-btn btn-ext" type="submit">Save</button>
+            <a class = "btn is-green-btn btn-ext" href = "/">Discard Changes</a>
+
+        </form>
+    </div>
+
+
+</div>
+</main>
+{% endblock %}
