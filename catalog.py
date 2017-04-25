@@ -401,6 +401,8 @@ def gdisconnect():
         flash('Failed to revoke token for given user.')
         return redirect(url_for('catalogList'))
 
+app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
+app.debug = False
 
 if __name__ == "__main__":
     app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
