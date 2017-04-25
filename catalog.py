@@ -403,7 +403,7 @@ def gdisconnect():
 
 
 if __name__ == "__main__":
-    app.secret_key = 'some secret key'
+    app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
     app.debug = False
     # port = int(os.environ.get('PORT', 8899))
     app.run(port=5000)
