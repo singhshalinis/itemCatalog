@@ -1,1 +1,1 @@
-web: python catalog.py ${PORT}
+web: uwsgi uwsgi.ini
