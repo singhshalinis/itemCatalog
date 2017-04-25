@@ -2,6 +2,7 @@
 client_secrets.json
 *.db
 *.pyc
+__*
 
 
 # Windows image file caches
