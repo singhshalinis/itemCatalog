@@ -32,12 +32,7 @@
 
 /******************** page level styling ********************/
 @font-face {
-    font-family: 'open_sanscondensed_light';
-    src: url('../fonts/OpenSans-CondLight-webfont.eot');
-    src: url('../fonts/OpenSans-CondLight-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/OpenSans-CondLight-webfont.woff') format('woff'),
-         url('../fonts/OpenSans-CondLight-webfont.ttf') format('truetype'),
-         url('../fonts/OpenSans-CondLight-webfont.svg#open_sanscondensed_light') format('svg');
+    /*font-family: 'open_sanscondensed_light';*/
     font-weight: normal;
     font-style: normal;
 }
@@ -48,8 +43,8 @@ html, body {
 }
 
 body {
-    /*font-family: 'Lato', sans-serif;*/
-    font-family: 'open_sanscondensed_light', sans-serif;
+    font-family: 'Lato', sans-serif;
+    /*font-family: 'open_sanscondensed_light', sans-serif;*/
     /*color: #333333 /*#f6f6f6; /*color: #747704;    */
     font-size: 16px;
     background-color: #f6f6f6;

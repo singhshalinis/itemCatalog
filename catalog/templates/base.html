@@ -41,7 +41,7 @@
                         {% if not user: %}
                             <a class="navitems" href="/login">Login </a>
                         {% else %}
-                            <p class="hello cat-italic" href="/">Hello {{user.name}}</p>
+                            <p class="hello cat-italic" href="/">Hello {{user.username}}</p>
                             <a class="navitems" href="/logout">Logout</a><!--conditional signin/signout/username-->
                         {% endif %}
                     </nav>
