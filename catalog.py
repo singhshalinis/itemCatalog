@@ -11,7 +11,7 @@ import json
 import requests
 import os
 
-from ..models import BaseModel, UserModel, ItemsModel, CategoryModel
+from models import BaseModel, UserModel, ItemsModel, CategoryModel
 
 app = Flask(__name__)
 
