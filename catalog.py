@@ -281,7 +281,7 @@ def gconnect():
         redirect_uri = os.environ.get("redirect_uris")
         scope=''
 
-        oauth_flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, scope=sscope)
+        oauth_flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, scope=scope)
 
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
