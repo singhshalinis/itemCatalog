@@ -283,7 +283,7 @@ def gconnect():
 
         oauth_flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, scope=scope)
 
-        oauth_flow.redirect_uri = 'postmessage'
+        # oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
         print credentials
 
@@ -415,7 +415,7 @@ def gdisconnect():
         return redirect(url_for('catalogList'))
 
 app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
-app.debug = False
+app.debug = True
 
 if __name__ == "__main__":
     # app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
