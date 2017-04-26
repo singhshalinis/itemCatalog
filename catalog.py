@@ -3,6 +3,7 @@ from flask import jsonify, make_response, session as login_session
 from sqlalchemy import create_engine
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from oauth2client.client import OAuth2WebServerFlow
 
 import httplib2
 import random
@@ -270,7 +271,17 @@ def gconnect():
     code = request.data
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+
+        # On Heroku, we cannot read from the files
+        # oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+
+        # Read environment variables from Heroku env
+        client_id = os.environ.get("client_id")
+        client_secret = os.environ.get("client_secret")
+        redirect_uris = os.environ.get("redirect_uris")
+        
+        oauth_flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri)
+
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
 
