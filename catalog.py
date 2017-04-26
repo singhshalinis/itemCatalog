@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 # CLIENT_ID = json.loads(
     # open('client_secrets.json', 'r').read())['web']['client_id']
-CLIENT_ID = os.environ.get('CLIENT_ID', None)
+CLIENT_ID = os.environ.get('client_id', None)
 
 @app.before_first_request
 def create_all():
@@ -285,6 +285,7 @@ def gconnect():
 
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
+        print credentials
 
     except FlowExchangeError:
         response = make_response(json.dumps(
@@ -417,7 +418,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
 app.debug = False
 
 if __name__ == "__main__":
-    app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
-    app.debug = False
+    # app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
+    # app.debug = False
     # port = int(os.environ.get('PORT', 8899))
     app.run(port=5000)
