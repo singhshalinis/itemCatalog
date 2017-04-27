@@ -17,9 +17,14 @@ from models import BaseModel, UserModel, ItemsModel, CategoryModel
 
 app = Flask(__name__)
 
-# CLIENT_ID = json.loads(
-    # open('client_secrets.json', 'r').read())['web']['client_id']
-CLIENT_ID = os.environ.get('client_id', None)
+# For local dev, read OAuth data from client_secrets.json
+client_id = os.environ.get('client_id')
+client_secret = os.environ.get('client_secret')
+scope =""
+redirect_uri ="postmessage"
+auth_uri = os.environ.get('auth_uri')
+token_uri = os.environ.get('token_uri')
+auth_provider_x509_cert_url = os.environ.get('auth_provider_x509_cert_url')
 
 @app.before_first_request
 def create_all():
@@ -420,7 +425,12 @@ app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
 app.debug = True
 
 if __name__ == "__main__":
-    # app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
-    # app.debug = False
-    # port = int(os.environ.get('PORT', 8899))
-    app.run(port=5000)
+    client_id = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+    client_secret = json.loads(open('client_secrets.json', 'r').read())['web']['client_secret']
+    scope=""
+    redirect_uri="postmessage"
+    auth_uri=json.loads(open('client_secrets.json', 'r').read())['web']['auth_uri']
+    token_uri=json.loads(open('client_secrets.json', 'r').read())['web']['token_uri']
+    auth_provider_x509_cert_url=json.loads(open('client_secrets.json', 'r').read())['web']['auth_provider_x509_cert_url']
+
+    app.run(host="0.0.0.0", port=5000)
