@@ -252,30 +252,14 @@ def contact():
 
 
 # JASON for the catalog
-@app.route('/catalog/catalog.json')
+@app.route('/catalog.json')
 def category_json():
     cats = CategoryModel.get_all()
     return jsonify(CategoryModel=[c.serialize for c in cats])
 
-
-@app.route('/catalog/items.json')
-def items_json():
-    items = ItemsModel.get_all()
-    return jsonify(ItemsModel=[i.serialize for i in items])
-
-
-@app.route('/catalog/<string:item_name>/item.json')
-def item_json(item_name):
-    item = ItemsModel.get_by_name(item_name)
-    if item:
-        return jsonify(item.serialize)
-    else:
-        response = make_response(json.dumps('Invalid item name.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-
-
-@app.route('/catalog/<string:category_name>/category.json')
+# @app.route('/catalog/<string:category_name>/items.json')
+# conflicting
+@app.route('/catalog/<string:category_name>.json')
 def catalog_items_json(category_name):
     cat = CategoryModel.get_by_name(category_name)
     if cat:
@@ -284,6 +268,28 @@ def catalog_items_json(category_name):
         response = make_response(json.dumps('Invalid category name.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
+
+@app.route('/catalog/<string:category_name>/<string:item_name>.json')
+def item_json(category_name, item_name):
+
+    item = ItemsModel.get_by_name(item_name)
+    cat = CategoryModel.get_by_name(category_name)
+
+    if item and cat and item.category_id == cat.id:
+        return jsonify(item.serialize)
+    else:
+        response = make_response(json.dumps('Invalid request parameters.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+@app.route('/catalog/allitems.json')
+def items_json():
+    items = ItemsModel.get_all()
+    return jsonify(ItemsModel=[i.serialize for i in items])
+
+
+
+
 
 # # delete this
 # @app.route('/users', methods=['GET'])
