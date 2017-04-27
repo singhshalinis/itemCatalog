@@ -356,15 +356,15 @@ def gconnect():
 
     # Check if new user, and add to DB
     em1 = login_session['email']
-    user_id = UserModel.get_by_email(user_email=em1).id
-    print 'user_id is not none = %s' % user_id
-    login_session['user_id'] = user_id
+    user = UserModel.get_by_email(user_email=em1)
+    # print 'user_id is not none = %s' % user_id
+    # login_session['user_id'] = user_id
 
-    if user_id is None:  # Its a new user
+    if user is None:  # Its a new user
         user = UserModel(username=login_session['username'], email=login_session['email'])
         user.create_user()
-        user_id = user.id
-        login_session['user_id'] = user_id
+
+    login_session['user_id'] = user.id
         # print "created new user_id %s" %(user.id)
 
         # print 'created new user_id %s' %user_id
