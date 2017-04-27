@@ -63,11 +63,12 @@ The app allows below functionalities as of now:
 2. Lists all categories and recent items available in the application.
 3. Provides details about items, and allows edit and delete of items for logged in users.
 4. Provides below JSON endpoints:
-    * /catalog/catalog.json: Lists all categories and all items in them.
-    * /catalog/items.json: Lists all items.
-    * /catalog/<string:item_name>/item.json: Details of one item.
-    * /catalog/<string:category_name>/category.json: All items in a category.
-    * e.g. http://localhost:5000/catalog/Shoes/category.json
+    * /catalog.json: Lists all categories and all items in them.
+    * /catalog/<string:category_name>.json: All items in a category.
+    (Does not provide, catalog/category/items.json which is an HTML endpoint due conflict with below)
+    * /catalog/<string:category_name>/<string:item_name>.json: Details of one item.
+    * /catalog/allitems.json: Lists all items.
+        * e.g. http://localhost:5000/catalog/Shoes/category.json
 
 
 Known issues
