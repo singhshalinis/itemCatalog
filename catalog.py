@@ -18,6 +18,7 @@ from models import BaseModel, UserModel, ItemsModel, CategoryModel
 app = Flask(__name__)
 
 # For local dev, read OAuth data from client_secrets.json
+# For Heroku, read from heroku config variables
 client_id = os.environ.get('client_id')
 client_secret = os.environ.get('client_secret')
 scope =""
