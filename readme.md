@@ -68,7 +68,7 @@ The app allows below functionalities as of now:
     (Does not provide, catalog/category/items.json which is an HTML endpoint due conflict with below)
     * /catalog/<string:category_name>/<string:item_name>.json: Details of one item.
     * /catalog/allitems.json: Lists all items.
-        * e.g. http://localhost:5000/catalog/Shoes/category.json
+        * e.g. http://localhost:5000/catalog/Shoes.json
 
 
 Known issues
