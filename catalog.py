@@ -67,6 +67,11 @@ def catalogList():
 @app.route('/catalog/<string:category_name>/items', methods=['GET'])
 def category_items(category_name):
     category = CategoryModel.get_by_name(category_name)
+
+    if category is None:
+        error = 'No such category!'
+        return render_template('errors.html', error=error)
+
     items = ItemsModel.get_all_in_a_category(category.id)
     current_user = UserModel.get_by_id(login_session.get('user_id'))
 
@@ -79,8 +84,17 @@ def category_items(category_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>', methods=['GET'])
 def category_item_details(category_name, item_name):
     category = CategoryModel.get_by_name(category_name)
+
+    if category is None:
+        error = 'No such category or item!'
+        return render_template('errors.html', error=error)
+
     item = ItemsModel.get_by_name_and_category(item_name, category.id)
     current_user = UserModel.get_by_id(login_session.get('user_id'))
+
+    if item is None or category is None:
+        error = 'No such item!'
+        return render_template('errors.html', error=error)
 
     return render_template("itemDetails.html", category=category, item=item,
                            user=current_user)
@@ -145,6 +159,11 @@ def category_item_edit(item_name):
         category = CategoryModel.get_by_name(ct_name)
         old_item = ItemsModel.get_by_id(id)
 
+        # check if the item exists (someone else has not already deleted it)
+        if old_item is None:
+            error = 'No such item!'
+            return render_template('errors.html', error=error)
+
         # check if this user owns the item
         if old_item.user_id != login_session['user_id']:
             error = 'You are not authorized to update this item.'
@@ -167,6 +186,15 @@ def category_item_edit(item_name):
         current_user = UserModel.get_by_id(login_session.get('user_id'))
         cats = CategoryModel.get_all()
         item = ItemsModel.get_by_name(item_name=item_name)
+
+        if current_user is None:
+            error = 'You are not logged in! Please login to continue.'
+            return render_template('errors.html', error=error)
+
+        if item is None:
+            error = 'No such item!'
+            return render_template('errors.html', error=error)
+
         return render_template("editItem.html", item=item, categories=cats,
                                user=current_user)
 
@@ -177,11 +205,16 @@ def category_item_delete(item_name):
     if request.method == 'POST':
 
         id = request.form['iid']
-        item = ItemsModel.get_by_id(id)
+        item = ItemsModel.get_by_name(item_name)
 
         # check if user is logged in
         if not login_session.get('user_id'):
             error = 'You are not logged in! Please login to continue.'
+            return render_template('errors.html', error=error)
+
+        # check if the item exists (someone else has not already deleted it)
+        if item is None:
+            error = 'No such item!'
             return render_template('errors.html', error=error)
 
         # check if this user owns the item
@@ -195,6 +228,15 @@ def category_item_delete(item_name):
     else:
         item = ItemsModel.get_by_name(item_name=item_name)
         current_user = UserModel.get_by_id(login_session.get('user_id'))
+
+        if current_user is None:
+            error = 'You are not logged in! Please login to continue.'
+            return render_template('errors.html', error=error)
+
+        if item is None:
+            error = 'No such item!'
+            return render_template('errors.html', error=error)
+
         return render_template("deleteItem.html", item=item, user=current_user)
 
 
