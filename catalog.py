@@ -268,32 +268,32 @@ def category_delete(category):
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    sys.stdout.write("entered gconnect")
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Obtain authorization code
+    # Obtain authorization code that login.html received
     code = request.data
+
     try:
         # Upgrade the authorization code into a credentials object
+        oauth_flow = flow = OAuth2WebServerFlow(
+            client_id=client_id,
+            client_secret=client_secret,
+            scope=scope,
+            redirect_uri=redirect_uri,
+            auth_uri=auth_uri,
+            token_uri=token_uri,
+            auth_provider_x509_cert_url=auth_provider_x509_cert_url
+        )
 
-        # On Heroku, we cannot read from the files
-        # oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        # Step 1
+        oauth_flow.step1_get_authorize_url()
 
-        # Read environment variables from Heroku env
-        client_id = os.environ.get("client_id")
-        client_secret = os.environ.get("client_secret")
-        redirect_uri = os.environ.get("redirect_uris")
-        scope=''
-
-        oauth_flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, scope=scope)
-
-        # oauth_flow.redirect_uri = 'postmessage'
+        # Step 2
         credentials = oauth_flow.step2_exchange(code)
-        print credentials
 
     except FlowExchangeError:
         response = make_response(json.dumps(
@@ -301,7 +301,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    # Check that the access token is valid.
+    # Next, check that the access token is valid
     access_token = credentials.access_token
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
@@ -324,7 +324,7 @@ def gconnect():
         return response
 
     # Verify that the access token is valid for this app.
-    if result['issued_to'] != CLIENT_ID:
+    if result['issued_to'] != client_id:
         response = make_response(json.dumps(
                                  "Token's client ID does not match app's."),
                                  401)
@@ -333,7 +333,6 @@ def gconnect():
         return response
 
     stored_credentials = login_session.get('credentials')
-
     stored_gplus_id = login_session.get('gplus_id')
 
     if stored_credentials is not None and gplus_id == stored_gplus_id:
@@ -356,15 +355,17 @@ def gconnect():
     login_session['email'] = data['email']
 
     # Check if new user, and add to DB
-    em = login_session['email']
-    user_id = UserModel.get_by_email(user_email=em)
-    # print 'user_id = %s' % user_id
-    if user_id:
-        login_session['user_id'] = user_id
-    else:
+    em1 = login_session['email']
+    user_id = UserModel.get_by_email(user_email=em1).id
+    print 'user_id is not none = %s' % user_id
+    login_session['user_id'] = user_id
+
+    if user_id is None:  # Its a new user
         user = UserModel(username=login_session['username'], email=login_session['email'])
         user.create_user()
-        login_session['user_id'] = user.id
+        user_id = user.id
+        login_session['user_id'] = user_id
+        # print "created new user_id %s" %(user.id)
 
         # print 'created new user_id %s' %user_id
 
@@ -381,7 +382,7 @@ def gconnect():
     output += '!</h3> <br><br>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 200px; border-radius: 150px;"> '
+    output += ' " style = "width: 100px; border-radius: 50px;"> '
     flash("You are now logged in as %s." % login_session['username'])
     return output
 
@@ -393,9 +394,6 @@ def gdisconnect():
     if c:
         access_token = c.access_token
 
-    print 'In gdisconnect access token is %s', access_token
-#    print 'User name is: '
-#    print login_session['username']
     if access_token is None:
         print 'Access Token is None'
         response = make_response(json.dumps('Current user not connected.'),
@@ -406,21 +404,23 @@ def gdisconnect():
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
-    print 'result is '
-    print result
 
+    # if the status = 200, it means we successfully revoked access
     if result['status'] == '200':
-        del login_session['credentials']
-        del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-        del login_session['user_id']
-        flash('Successfully disconnected.')
-        return redirect(url_for('catalogList'))
-    else:
-        flash('Failed to revoke token for given user.')
-        return redirect(url_for('catalogList'))
+        message = 'Successfully disconnected.'
+    else:  # else it means that the token has expired
+        message = 'You are not connected!'
+
+    # In either case, do below
+    del login_session['credentials']
+    del login_session['gplus_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    del login_session['user_id']
+    flash(message)
+    return redirect(url_for('catalogList'))
+    
 
 app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
 app.debug = True
