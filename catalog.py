@@ -21,11 +21,12 @@ app = Flask(__name__)
 # For Heroku, read from heroku config variables
 client_id = os.environ.get('client_id')
 client_secret = os.environ.get('client_secret')
-scope =""
-redirect_uri ="postmessage"
+scope = ""
+redirect_uri = "postmessage"
 auth_uri = os.environ.get('auth_uri')
 token_uri = os.environ.get('token_uri')
 auth_provider_x509_cert_url = os.environ.get('auth_provider_x509_cert_url')
+
 
 @app.before_first_request
 def create_all():
@@ -38,7 +39,8 @@ def create_all():
         seed_file = open('categories.txt', 'r')
         for line in seed_file:
             cat = line.split(':')
-            category = CategoryModel(name=cat[0], desc=cat[1], user_id=admin.id, user=admin)
+            category = CategoryModel(name=cat[0], desc=cat[1],
+                                     user_id=admin.id, user=admin)
             category.create_category()
 
 
@@ -81,7 +83,8 @@ def category_items(category_name):
 
 
 # List details of one particular item
-@app.route('/catalog/<string:category_name>/<string:item_name>', methods=['GET'])
+@app.route('/catalog/<string:category_name>/<string:item_name>',
+           methods=['GET'])
 def category_item_details(category_name, item_name):
     category = CategoryModel.get_by_name(category_name)
 
@@ -131,7 +134,7 @@ def category_item_add():
                                    i_ct=ct)
 
         item = ItemsModel(name=nm, desc=ds, category_id=category.id,
-                        user_id=login_session['user_id'])
+                          user_id=login_session['user_id'])
         item.save_to_db()
         return redirect(url_for('catalogList'))
     else:
@@ -170,17 +173,19 @@ def category_item_edit(item_name):
             return render_template('errors.html', error=error)
 
         # check if there were updates
-        if old_item.name == nm and old_item.desc == ds and old_item.category.name == ct_name:
+        if old_item.name == nm and old_item.desc == ds and
+        old_item.category.name == ct_name:
             error = 'Nothing to update'
             return render_template("errors.html", error=error)
         else:
             # if updates, save
             # updated_item =
-            # ItemModel.updateItem(old_name=old_item.name, name=nm, desc=ds, category=category)
+            # ItemModel.updateItem(old_name=old_item.name,
+            # name=nm, desc=ds, category=category)
             old_item.name = nm
             old_item.desc = ds
             old_item.category = category
-            old_item.save_to_db() # only save no update???
+            old_item.save_to_db()  # only save no update???
             return redirect(url_for('catalogList'))
     else:
         current_user = UserModel.get_by_id(login_session.get('user_id'))
@@ -403,13 +408,13 @@ def gconnect():
     # login_session['user_id'] = user_id
 
     if user is None:  # Its a new user
-        user = UserModel(username=login_session['username'], email=login_session['email'])
+        user = UserModel(username=login_session['username'],
+                         email=login_session['email'])
         user.create_user()
 
     login_session['user_id'] = user.id
-        # print "created new user_id %s" %(user.id)
-
-        # print 'created new user_id %s' %user_id
+    # print "created new user_id %s" %(user.id)
+    # print 'created new user_id %s' %user_id
 
     # print "login_session['user_id']"
     # print login_session['user_id']
@@ -468,12 +473,23 @@ app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
 app.debug = True
 
 if __name__ == "__main__":
-    client_id = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
-    client_secret = json.loads(open('client_secrets.json', 'r').read())['web']['client_secret']
-    scope=""
-    redirect_uri="postmessage"
-    auth_uri=json.loads(open('client_secrets.json', 'r').read())['web']['auth_uri']
-    token_uri=json.loads(open('client_secrets.json', 'r').read())['web']['token_uri']
-    auth_provider_x509_cert_url=json.loads(open('client_secrets.json', 'r').read())['web']['auth_provider_x509_cert_url']
+    client_id = json.loads(open('client_secrets.json', 'r')
+                           .read())['web']['client_id']
+
+    client_secret = json.loads(open('client_secrets.json', 'r')
+                               .read())['web']['client_secret']
+
+    scope = ""
+    redirect_uri = "postmessage"
+
+    auth_uri = json.loads(open('client_secrets.json', 'r')
+                          .read())['web']['auth_uri']
+
+    token_uri = json.loads(open('client_secrets.json', 'r')
+                           .read())['web']['token_uri']
+
+    auth_provider_x509_cert_url = json.loads(open('client_secrets.json', 'r')
+                                             .read())['web']
+    ['auth_provider_x509_cert_url']
 
     app.run(host="0.0.0.0", port=5000)
