@@ -23,10 +23,10 @@
 
         <form action="{{url_for('category_item_add')}}" method = 'POST'>
             <br><small>Name</small>
-            <input type="text" name="iname" value={{i_name}}>
+            <input type="text" name="iname" value='{{i_name}}'>
 
             <br><br><small>Description</small>
-            <input type="text" name="idesc" value={{i_desc}}>
+            <input type="text" name="idesc" value='{{i_desc}}'>
 
             <br><br><small>Category</small>
             <select name="icategory">

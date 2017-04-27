@@ -43,7 +43,7 @@ class UserModel(BaseModel):
     def get_by_email(cls, user_email):
         user = session.query(UserModel).filter_by(email=user_email).first()
         if user:
-            return user.id
+            return user
         # return {"message" : "No user with this email address"}
         return None
 

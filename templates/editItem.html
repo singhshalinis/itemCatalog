@@ -12,7 +12,7 @@
     <div class="">
         <form action="{{url_for('category_item_edit', item_name=item.name)}}" method = 'POST'>
 
-            <input type="hidden" name='iid' value={{item.id}}>
+            <input type="hidden" name='iid' value='{{item.id}}'>
 
             <br><small>Name</small>
             <input class="item-details"  type="text" name="iname" value='{{item.name}}'>
