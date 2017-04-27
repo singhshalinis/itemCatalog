@@ -173,8 +173,7 @@ def category_item_edit(item_name):
             return render_template('errors.html', error=error)
 
         # check if there were updates
-        if old_item.name == nm and old_item.desc == ds and
-        old_item.category.name == ct_name:
+        if old_item.name == nm and old_item.desc == ds and old_item.category.name == ct_name:
             error = 'Nothing to update'
             return render_template("errors.html", error=error)
         else:
