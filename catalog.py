@@ -48,7 +48,7 @@ def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    return render_template("login.html", STATE=state)
+    return render_template("login.html", STATE=state, client_id=client_id)
 
 
 # List all categories and latest items
@@ -420,7 +420,7 @@ def gdisconnect():
     del login_session['user_id']
     flash(message)
     return redirect(url_for('catalogList'))
-    
+
 
 app.secret_key = os.environ.get('SECRET_KEY', 'some secret_key')
 app.debug = True
