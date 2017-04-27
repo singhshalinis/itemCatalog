@@ -3,26 +3,26 @@ Item Catalog
 
 What is it? (Functionality)
 ---------------------------
-An application that provides a list of items within a variety of categories as well as provide a user registration and authentication system. Registered users will have the ability to add, edit and delete their own items.
+An application that provides item catalog management. It provides login via Google's sign in. Registered and logged in users will have the ability to add, edit and delete items. The data currently persists on SQLite database.
 
 
 Last Update Date
 -----------------
-April 14, 2016
+April 27, 2016
 
 
 System Specific Notes
 -----------------------
 * Developed in Python 2.7 using Flask, Jinja and SQLAlchemy.
-* Google as the authentication provider.
-* SQLLite Database
+* Implements Google sign in for authentication.
+* SQLite Database
 
 
 Testing
 ----------
 * The website is designed for all devices but has been tested only on Chrome browser on Desktop.
 
-Package Details (files involved)
+Package Details (files)
 --------------------------------
 Below is a brief description of the folders/files that have been used for this application.
 1. models (folder): Contains the models used in the application.
@@ -54,7 +54,7 @@ How to get started
 
 4. Access the website at http://localhost:5000.
 
-5. Add, update, remove categories by changing the categories.txt file. Due to the design, this will only reflect when we remove catalog01.db file and restart.
+5. Add, update, remove categories by changing the categories.txt file. Due to current design, this will only reflect when we remove catalog01.db file and restart.
 
 Functionalities
 ---------------
@@ -80,7 +80,7 @@ Known issues
       2017-04-27T22:28:42.538556+00:00 app[web.1]: KeyError: '"https'
 
 
-In the browser, there is 503-Service Unavailable error. The error may be due to Heroku sending requests via https but the app currently does not support https.  
+Browser shows a 503-Service Unavailable error. The error may be due to Heroku sending requests via https and the app currently does not support https.  
 
 References, Credits & Acknowledgements
 --------------------------------------
