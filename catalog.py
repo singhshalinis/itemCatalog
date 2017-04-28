@@ -494,7 +494,6 @@ if __name__ == "__main__":
                            .read())['web']['token_uri']
 
     auth_provider_x509_cert_url = json.loads(open('client_secrets.json', 'r')
-                                             .read())['web']
-    ['auth_provider_x509_cert_url']
+                                             .read())['web']['auth_provider_x509_cert_url']
 
     app.run(host="0.0.0.0", port=5000)
