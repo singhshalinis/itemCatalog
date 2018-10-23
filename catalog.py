@@ -15,24 +15,41 @@ import sys
 
 from models import BaseModel, UserModel, ItemsModel, CategoryModel
 
+# database string
+db_string = "postgresql://postgres:postgres@localhost:5432/catalog"
+# db_string = 'sqlite:///catalog01.db'
+
 app = Flask(__name__)
 
 # For local dev, read OAuth data from client_secrets.json
-# For Heroku, read from heroku config variables
-client_id = os.environ.get('client_id')
-client_secret = os.environ.get('client_secret')
+client_id = json.loads(open('client_secrets.json', 'r')
+                           .read())['web']['client_id']
+client_secret = json.loads(open('client_secrets.json', 'r')
+                           .read())['web']['client_secret']
+auth_uri = json.loads(open('client_secrets.json', 'r')
+                      .read())['web']['auth_uri']
+token_uri = json.loads(open('client_secrets.json', 'r')
+                       .read())['web']['token_uri']
+auth_provider_x509_cert_url = json.loads(open('client_secrets.json', 'r')
+                                             .read())['web']['auth_provider_x509_cert_url']
 scope = ""
 redirect_uri = "postmessage"
-auth_uri = os.environ.get('auth_uri')
-token_uri = os.environ.get('token_uri')
-auth_provider_x509_cert_url = os.environ.get('auth_provider_x509_cert_url')
+
+# For Heroku, read from heroku config variables
+# client_id = os.environ.get('client_id')
+# client_secret = os.environ.get('client_secret')
+# scope = ""
+# redirect_uri = "postmessage"
+# auth_uri = os.environ.get('auth_uri')
+# token_uri = os.environ.get('token_uri')
+# auth_provider_x509_cert_url = os.environ.get('auth_provider_x509_cert_url')
 
 
 @app.before_first_request
 def create_all():
     # create only once
-    if not os.path.exists('catalog01.db'):
-        engine = create_engine('sqlite:///catalog01.db')
+    if not os.path.exists('init.done'):
+        engine = create_engine(db_string)
         BaseModel.metadata.create_all(engine)
         admin = UserModel(username='admin', email='admin@xyz.com')
         admin.create_user()
@@ -42,6 +59,9 @@ def create_all():
             category = CategoryModel(name=cat[0], desc=cat[1],
                                      user_id=admin.id, user=admin)
             category.create_category()
+
+        # create a file to denote that setup is complete
+        f = open("init.done", "x")
 
 
 # Login & Logout
@@ -392,9 +412,8 @@ def gconnect():
                                             connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
-
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.to_json()
     login_session['gplus_id'] = gplus_id
 
     # Get user info
@@ -442,9 +461,11 @@ def gconnect():
 @app.route('/logout')
 def gdisconnect():
     c = login_session.get('credentials')
+    print "c is: " + c
     access_token = None
     if c:
-        access_token = c.access_token
+        json_obj = json.loads(c)
+        access_token = json_obj["access_token"]
 
     if access_token is None:
         print 'Access Token is None'
